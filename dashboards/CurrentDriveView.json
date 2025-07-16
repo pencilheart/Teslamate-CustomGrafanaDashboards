@@ -228,23 +228,23 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "speed_mih"
+              "options": "Fan Status"
             },
             "properties": [
               {
                 "id": "color",
                 "value": {
-                  "fixedColor": "light-blue",
+                  "fixedColor": "dark-blue",
                   "mode": "fixed"
                 }
               },
               {
                 "id": "unit",
-                "value": "velocitymih"
+                "value": ""
               },
               {
                 "id": "displayName",
-                "value": "Speed"
+                "value": "Fan Status"
               },
               {
                 "id": "custom.axisPlacement",
@@ -304,7 +304,7 @@
           "hide": false,
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n\t$__time(date),\n\tavg(power) AS Power,\n\tavg(battery_heater::integer) AS \"Battery heater\",\n\tavg(convert_km(speed::numeric, '$length_unit')) AS speed_${length_unit}h\nFROM\n\tpositions\nWHERE\n car_id = $car_id AND\n $__timeFilter(date)\nGROUP BY 1  \nORDER BY\n\tdate ASC",
+          "rawSql": "SELECT\n\t$__time(date),\n\tavg(power) AS Power,\n\tavg(battery_heater::integer) AS \"Battery heater\",\n\tavg(convert_km(speed::numeric, '$length_unit')) AS speed_${length_unit}h,\n\tavg(fan_status::integer) AS \"Fan Status\"\nFROM\n\tpositions\nWHERE\n\tcar_id = $car_id AND\n\t$__timeFilter(date)\nGROUP BY 1\nORDER BY\n\tdate ASC",
           "refId": "Power",
           "select": [
             [
