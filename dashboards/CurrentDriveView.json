@@ -157,7 +157,7 @@
                 "value": {
                   "fixedColor": "dark-orange",
                   "mode": "fixed",
-                  "seriesBy": "last",
+                  "seriesBy": "last"
                 }
               },
               {
