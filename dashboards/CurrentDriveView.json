@@ -79,7 +79,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 5,
+            "fillOpacity": 0,
             "gradientMode": "hue",
             "hideFrom": {
               "legend": false,
@@ -87,7 +87,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "smooth",
+            "lineInterpolation": "step_before",
             "lineStyle": {
               "fill": "solid"
             },
@@ -157,7 +157,7 @@
                 "value": {
                   "fixedColor": "dark-orange",
                   "mode": "fixed",
-                  "seriesBy": "last"
+                  "seriesBy": "last",
                 }
               },
               {
@@ -179,6 +179,10 @@
                     }
                   ]
                 }
+              },
+              {
+                "id": "custom.axisCenteredZero",
+                "value": "true"
               }
             ]
           },
@@ -222,6 +226,10 @@
               {
                 "id": "custom.axisPlacement",
                 "value": "hidden"
+              },
+              {
+                "id": "custom.axisCenteredZero",
+                "value": "true"
               }
             ]
           },
