@@ -19,7 +19,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 101,
   "links": [
     {
       "asDropdown": true,
@@ -81,8 +81,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-red",
-                "value": null
+                "color": "dark-red"
               },
               {
                 "color": "semi-dark-green",
@@ -136,7 +135,7 @@
         },
         "valueMode": "color"
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -210,8 +209,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-red",
-                "value": null
+                "color": "dark-red"
               },
               {
                 "color": "dark-green",
@@ -265,7 +263,7 @@
         },
         "valueMode": "color"
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -341,8 +339,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "light-orange",
-                "value": null
+                "color": "light-orange"
               }
             ]
           },
@@ -374,7 +371,7 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "alias": "kWh Added",
@@ -454,7 +451,7 @@
         "content": "<center>\n<img src=\"https://raw.githubusercontent.com/jheredianet/Teslamate-CustomGrafanaDashboards/main/screenshots/help/BatteryCharging.gif\"\nstyle=\"max-height: 125px\" />\n</center>",
         "mode": "html"
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "title": "",
       "type": "text"
     },
@@ -478,8 +475,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "light-orange",
-                "value": null
+                "color": "light-orange"
               }
             ]
           },
@@ -500,7 +496,7 @@
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "max"
           ],
           "fields": "/^Added$/",
           "values": false
@@ -509,7 +505,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "alias": "kWh Added",
@@ -517,12 +513,13 @@
             "type": "grafana-postgresql-datasource",
             "uid": "TeslaMate"
           },
+          "editorMode": "code",
           "format": "time_series",
           "group": [],
           "hide": false,
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT $__timeGroupAlias(date,$__interval), avg(charge_energy_added) as \"Added\" FROM charges WHERE charging_process_id = $charging_processes AND $__timeFilter(date) GROUP BY 1 ",
+          "rawSql": "SELECT $__timeGroupAlias(date,$__interval), max(charge_energy_added) as \"Added\" FROM charges WHERE charging_process_id=$charging_process_id AND $__timeFilter(date) GROUP BY 1 ",
           "refId": "B",
           "select": [
             [
@@ -534,6 +531,23 @@
               }
             ]
           ],
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
           "table": "drives",
           "timeColumn": "start_date",
           "timeColumnType": "timestamp",
@@ -565,8 +579,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "super-light-blue",
-                "value": null
+                "color": "super-light-blue"
               }
             ]
           }
@@ -598,7 +611,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -682,8 +695,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -769,7 +781,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "alias": "Power [kW]",
@@ -843,8 +855,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -877,7 +888,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "alias": "Real",
@@ -894,7 +905,7 @@
           "orderByTime": "ASC",
           "policy": "default",
           "rawQuery": true,
-          "rawSql": " SELECT battery_level as \"Initial SOC\" FROM charges \twhere charging_process_id=$charging_processes \tORDER BY DATE ASC \tLIMIT 1",
+          "rawSql": " SELECT battery_level as \"Initial SOC\" FROM charges \twhere charging_process_id=$charging_process_id \tORDER BY DATE ASC \tLIMIT 1",
           "refId": "Inital SOC",
           "resultFormat": "time_series",
           "select": [
@@ -928,7 +939,7 @@
           "hide": false,
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT battery_level - (SELECT battery_level as \"Added\" FROM charges where charging_process_id=$charging_processes\tORDER BY DATE ASC \tLIMIT 1) as \"Added\" FROM charges c join charging_processes p ON p.id = c.charging_process_id WHERE $__timeFilter(date) AND p.car_id = $car_id ORDER BY c.ID DESC LIMIT 1",
+          "rawSql": "SELECT battery_level - (SELECT battery_level as \"Added\" FROM charges where charging_process_id=$charging_process_id\tORDER BY DATE ASC \tLIMIT 1) as \"Added\" FROM charges c join charging_processes p ON p.id = c.charging_process_id WHERE $__timeFilter(date) AND p.car_id = $car_id ORDER BY c.ID DESC LIMIT 1",
           "refId": "A",
           "select": [
             [
@@ -968,8 +979,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "super-light-blue",
-                "value": null
+                "color": "super-light-blue"
               }
             ]
           },
@@ -1002,7 +1012,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "alias": "Elapsed Time",
@@ -1031,7 +1041,7 @@
           "orderByTime": "ASC",
           "policy": "default",
           "rawQuery": true,
-          "rawSql": "SELECT EXTRACT(EPOCH FROM (end_date - start_date)) AS \"Elapsed\" FROM \r\n  (SELECT min(date) as start_date FROM charges where charging_process_id=$charging_processes) s\r\n  CROSS JOIN \r\n  (SELECT max(date) as end_date FROM charges where charging_process_id=$charging_processes) e",
+          "rawSql": "SELECT EXTRACT(EPOCH FROM (end_date - start_date)) AS \"Elapsed\" FROM \r\n  (SELECT min(date) as start_date FROM charges where charging_process_id=$charging_process_id) s\r\n  CROSS JOIN \r\n  (SELECT max(date) as end_date FROM charges where charging_process_id=$charging_process_id) e",
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -1102,8 +1112,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -1190,7 +1199,7 @@
           "zoom": 15
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "alias": "",
@@ -1303,8 +1312,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -1337,7 +1345,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "alias": "Real",
@@ -1416,8 +1424,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -1462,7 +1469,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1474,7 +1481,7 @@
           "hide": false,
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT $__timeGroupAlias(date,$__interval), avg(case when charger_voltage > 2 then charger_actual_current else ((2.85 + (usable_battery_level * 0.013)) * 96) * charger_power / 100 end) as \"Current\" FROM charges WHERE charging_process_id = $charging_processes AND $__timeFilter(date) GROUP BY 1 ORDER BY 1 ",
+          "rawSql": "SELECT $__timeGroupAlias(date,$__interval), avg(case when charger_voltage > 2 then charger_actual_current else ((2.85 + (usable_battery_level * 0.013)) * 96) * charger_power / 100 end) as \"Current\" FROM charges WHERE charging_process_id=$charging_process_id AND $__timeFilter(date) GROUP BY 1 ORDER BY 1 ",
           "refId": "Current",
           "select": [
             [
@@ -1514,8 +1521,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -1548,7 +1554,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1559,7 +1565,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT $__timeGroupAlias(date,$__interval), avg(case when charger_voltage > 2 then charger_voltage else charger_power / GREATEST(0.1, (((2.85 + (usable_battery_level * 0.013)) * 96.0) * charger_power / 100.0)) * 1000.0 end) as \"Volt\" FROM charges WHERE charging_process_id = $charging_processes AND $__timeFilter(date) GROUP BY 1 ORDER BY 1 ",
+          "rawSql": "SELECT $__timeGroupAlias(date,$__interval), avg(case when charger_voltage > 2 then charger_voltage else charger_power / GREATEST(0.1, (((2.85 + (usable_battery_level * 0.013)) * 96.0) * charger_power / 100.0)) * 1000.0 end) as \"Volt\" FROM charges WHERE charging_process_id=$charging_process_id AND $__timeFilter(date) GROUP BY 1 ORDER BY 1 ",
           "refId": "Voltage",
           "select": [
             [
@@ -1600,8 +1606,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -1634,7 +1639,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1646,7 +1651,7 @@
           "hide": false,
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT $__timeGroupAlias(date,$__interval), avg(case when charger_phases >= 1 then (case when charger_phases = 2 then 3 when charger_phases = 1 then 1 else 0 end) * charger_actual_current * charger_voltage / 1000.0 else charger_power end) as \"Power\" FROM charges WHERE charging_process_id = $charging_processes AND $__timeFilter(date) GROUP BY 1 ORDER BY 1 ",
+          "rawSql": "SELECT $__timeGroupAlias(date,$__interval), avg(case when charger_phases >= 1 then (case when charger_phases = 2 then 3 when charger_phases = 1 then 1 else 0 end) * charger_actual_current * charger_voltage / 1000.0 else charger_power end) as \"Power\" FROM charges WHERE charging_process_id=$charging_process_id AND $__timeFilter(date) GROUP BY 1 ORDER BY 1 ",
           "refId": "Current",
           "select": [
             [
@@ -1688,8 +1693,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "orange",
-                "value": null
+                "color": "orange"
               }
             ]
           }
@@ -1782,7 +1786,7 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "alias": "Real",
@@ -1800,7 +1804,7 @@
           "orderByTime": "ASC",
           "policy": "default",
           "rawQuery": true,
-          "rawSql": "SELECT MIN(convert_km(${preferred_range}_battery_range_km, '$length_unit')) as start_$length_unit\r\nFROM charges WHERE charging_process_id = $charging_processes",
+          "rawSql": "SELECT MIN(convert_km(${preferred_range}_battery_range_km, '$length_unit')) as start_$length_unit\r\nFROM charges WHERE charging_process_id=$charging_process_id",
           "refId": "Initial Range",
           "resultFormat": "time_series",
           "select": [
@@ -1859,7 +1863,7 @@
           "orderByTime": "ASC",
           "policy": "default",
           "rawQuery": true,
-          "rawSql": "SELECT ROUND(convert_km(end_range - start_range, '$length_unit'),0) as added_$length_unit \r\nFROM\r\n(SELECT MIN(${preferred_range}_battery_range_km) as start_range\r\nFROM charges WHERE charging_process_id = $charging_processes) s\r\nCROSS JOIN (\r\nSELECT MAX(${preferred_range}_battery_range_km) as  end_range \r\nFROM charges WHERE charging_process_id = $charging_processes) e",
+          "rawSql": "SELECT ROUND(convert_km(end_range - start_range, '$length_unit'),0) as added_$length_unit \r\nFROM\r\n(SELECT MIN(${preferred_range}_battery_range_km) as start_range\r\nFROM charges WHERE charging_process_id=$charging_process_id) s\r\nCROSS JOIN (\r\nSELECT MAX(${preferred_range}_battery_range_km) as  end_range \r\nFROM charges WHERE charging_process_id=$charging_process_id) e",
           "refId": "Range Added",
           "resultFormat": "time_series",
           "select": [
@@ -1918,7 +1922,7 @@
           "orderByTime": "ASC",
           "policy": "default",
           "rawQuery": true,
-          "rawSql": "SELECT MAX(convert_km(${preferred_range}_battery_range_km, '$length_unit')) as  current_$length_unit \r\nFROM charges WHERE charging_process_id = $charging_processes",
+          "rawSql": "SELECT MAX(convert_km(${preferred_range}_battery_range_km, '$length_unit')) as  current_$length_unit \r\nFROM charges WHERE charging_process_id=$charging_process_id",
           "refId": "Current Range",
           "resultFormat": "time_series",
           "select": [
@@ -1980,8 +1984,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2078,7 +2081,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -2090,7 +2093,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT $__timeGroupAlias(date,$__interval), avg(convert_celsius(outside_temp, '$temp_unit')) as outdoor_$temp_unit FROM charges WHERE charging_process_id = $charging_processes AND $__timeFilter(date) GROUP BY 1 ORDER BY 1 ",
+          "rawSql": "SELECT $__timeGroupAlias(date,$__interval), avg(convert_celsius(outside_temp, '$temp_unit')) as outdoor_$temp_unit FROM charges WHERE charging_process_id=$charging_process_id AND $__timeFilter(date) GROUP BY 1 ORDER BY 1 ",
           "refId": "Outdoor",
           "select": [
             [
@@ -2234,14 +2237,17 @@
     }
   ],
   "preload": false,
-  "schemaVersion": 40,
+  "schemaVersion": 41,
   "tags": [
     "TeslamateCustomDashboards"
   ],
   "templating": {
     "list": [
       {
-        "current": {},
+        "current": {
+          "text": "Cybertruck",
+          "value": "1"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2257,7 +2263,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "km",
+          "value": "km"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2273,7 +2282,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "C",
+          "value": "C"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2289,7 +2301,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "77.3471012036518",
+          "value": "77.3471012036518"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2305,7 +2320,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "1752582704000",
+          "value": "1752582704000"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2321,7 +2339,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "2",
+          "value": "2"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2337,7 +2358,27 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "2",
+          "value": "2"
+        },
+        "hide": 2,
+        "name": "charging_process_id",
+        "options": [
+          {
+            "selected": true,
+            "text": "2",
+            "value": "2"
+          }
+        ],
+        "query": "2",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "1752584087000",
+          "value": "1752584087000"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2353,7 +2394,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "rated",
+          "value": "rated"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2372,8 +2416,8 @@
     ]
   },
   "time": {
-    "from": "now-15m",
-    "to": "now"
+    "from": "2025-07-15T12:31:44.000Z",
+    "to": "2025-07-15T12:55:07.000Z"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -2391,6 +2435,5 @@
   "timezone": "",
   "title": "Current Charge View",
   "uid": "jchm9RxutVS7a",
-  "version": 2,
-  "weekStart": ""
+  "version": 14
 }
