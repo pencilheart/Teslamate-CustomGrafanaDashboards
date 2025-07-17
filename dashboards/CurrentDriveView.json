@@ -20,7 +20,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": 3,
+  "id": 102,
   "links": [
     {
       "asDropdown": true,
@@ -112,8 +112,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent",
-                "value": null
+                "color": "transparent"
               }
             ]
           }
@@ -170,8 +169,7 @@
                   "mode": "absolute",
                   "steps": [
                     {
-                      "color": "transparent",
-                      "value": null
+                      "color": "transparent"
                     },
                     {
                       "color": "dark-green",
@@ -298,7 +296,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "alias": "",
@@ -412,8 +410,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -544,7 +541,7 @@
           "zoom": 15
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "alias": "",
@@ -653,8 +650,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -710,7 +706,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -776,7 +772,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "fixedColor": "yellow",
+            "mode": "fixed"
           },
           "decimals": 0,
           "mappings": [],
@@ -787,8 +784,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "light-orange",
-                "value": null
+                "color": "light-orange"
               }
             ]
           },
@@ -820,7 +816,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "alias": "kWh Added",
@@ -834,7 +830,7 @@
           "hide": false,
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT $BatteryCapacity AS \"Battery Capacity\"",
+          "rawSql": "with drives_start_event as (\n\n    select\n        'drive_start' as event, start_date as date, start_${preferred_range}_range_km as range, start_km as odometer, car_id\n    from drives\n    where car_id = $car_id and $__timeFilter(start_date) and 48 <= extract(hour FROM to_timestamp(${__to:date:seconds}) - to_timestamp(${__from:date:seconds}))\n\n),\n\ndrives_end_event as (\n\n    select\n        'drive_end' as event, end_date as date, end_${preferred_range}_range_km as range, end_km as odometer, car_id\n    from drives\n    where car_id = $car_id and $__timeFilter(end_date) and 48 <= extract(hour FROM to_timestamp(${__to:date:seconds}) - to_timestamp(${__from:date:seconds}))\n\n),\n\ncharging_processes_start_event as (\n\n    select\n        'charging_process_start' as event, start_date as date, start_${preferred_range}_range_km as range, p.odometer, cp.car_id\n    from charging_processes cp\n        inner join positions p on cp.position_id = p.id\n    where cp.car_id = $car_id and $__timeFilter(start_date) and 48 <= extract(hour FROM to_timestamp(${__to:date:seconds}) - to_timestamp(${__from:date:seconds}))\n\n),\n\ncharging_processes_end_event as (\n\n    select\n        'charging_process_end' as event, end_date as date, end_${preferred_range}_range_km as range, p.odometer, cp.car_id\n    from charging_processes cp\n        inner join positions p on cp.position_id = p.id\n    where cp.car_id = $car_id and $__timeFilter(end_date) and 48 <= extract(hour FROM to_timestamp(${__to:date:seconds}) - to_timestamp(${__from:date:seconds}))\n\n),\n\npositions as (\n\n    select\n        case\n            when drive_id is not null and lead(drive_id) over w is not null then 'drive_start'\n            else 'something'\n        end as event,\n        date, ${preferred_range}_battery_range_km as range, p.odometer, p.car_id\n    from positions p\n    where ideal_battery_range_km is not null and car_id = $car_id and $__timeFilter(date) and 48 > extract(hour FROM to_timestamp(${__to:date:seconds}) - to_timestamp(${__from:date:seconds}))\n    window w as (order by date)\n\n),\n\ncombined as (\n\n    select * from drives_start_event\n    union all\n    select * from drives_end_event\n    union all\n    select * from charging_processes_start_event\n    union all\n    select * from charging_processes_end_event\n    union all\n    select * from positions\n\n),\n\nfinal as (\n\n    select\n        car_id,\n        lead(odometer) over w - odometer as distance,\n        case when event != 'drive_start' then greatest(range - lead(range) over w, 0) else range - lead(range) over w end as range_loss\n    from combined\n    window w as (order by date asc)\n\n)\n\nselect\n    -- 方法一：能耗 × 距离 = 总电量消耗（单位 Wh）\n    (\n        (sum(range_loss) * c.efficiency)\n        / nullif(convert_km(sum(distance)::numeric, '$length_unit'), 0)\n    )\n    * convert_km(sum(distance)::numeric, '$length_unit') as total_energy_used_wh\nfrom final\n    inner join cars c on car_id = c.id\ngroup by c.efficiency",
           "refId": "B",
           "select": [
             [
@@ -875,7 +871,7 @@
           ]
         }
       ],
-      "title": "Battery Capacity",
+      "title": "Energy consumed (net)",
       "type": "stat"
     },
     {
@@ -890,8 +886,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "yellow",
-                "value": null
+                "color": "yellow"
               }
             ]
           }
@@ -947,7 +942,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1018,8 +1013,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1116,7 +1110,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1283,8 +1277,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "super-light-blue",
-                "value": null
+                "color": "super-light-blue"
               }
             ]
           },
@@ -1317,7 +1310,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "alias": "Elapsed Time",
@@ -1407,8 +1400,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "#c7d0d9",
-                "value": null
+                "color": "#c7d0d9"
               }
             ]
           },
@@ -1478,7 +1470,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1555,8 +1547,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "#c7d0d9",
-                "value": null
+                "color": "#c7d0d9"
               }
             ]
           },
@@ -1619,7 +1610,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1696,8 +1687,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "#c7d0d9",
-                "value": null
+                "color": "#c7d0d9"
               }
             ]
           },
@@ -1760,7 +1750,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1827,8 +1817,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "#c7d0d9",
-                "value": null
+                "color": "#c7d0d9"
               }
             ]
           },
@@ -1898,7 +1887,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1970,8 +1959,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-red",
-                "value": null
+                "color": "dark-red"
               },
               {
                 "color": "semi-dark-green",
@@ -2023,7 +2011,7 @@
         "text": {},
         "valueMode": "color"
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -2097,8 +2085,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-red",
-                "value": null
+                "color": "dark-red"
               },
               {
                 "color": "dark-green",
@@ -2150,7 +2137,7 @@
         "text": {},
         "valueMode": "color"
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -2208,14 +2195,17 @@
   ],
   "preload": false,
   "refresh": "",
-  "schemaVersion": 40,
+  "schemaVersion": 41,
   "tags": [
     "TeslamateCustomDashboards"
   ],
   "templating": {
     "list": [
       {
-        "current": {},
+        "current": {
+          "text": "Cybertruck",
+          "value": "1"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2231,7 +2221,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "km",
+          "value": "km"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2247,7 +2240,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "C",
+          "value": "C"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2263,7 +2259,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "rated",
+          "value": "rated"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2279,7 +2278,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "m",
+          "value": "m"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2295,7 +2297,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "33",
+          "value": "33"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2311,7 +2316,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "1752766631000",
+          "value": "1752766631000"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2327,7 +2335,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "1752767268000",
+          "value": "1752767268000"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2343,7 +2354,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "77.34656430520593",
+          "value": "77.34656430520593"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2359,7 +2373,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "14.3",
+          "value": "14.3"
+        },
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
@@ -2377,13 +2394,12 @@
     ]
   },
   "time": {
-    "from": "now-15m",
-    "to": "now"
+    "from": "2025-07-17T15:37:11.000Z",
+    "to": "2025-07-17T15:47:48.000Z"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Current Drive View",
   "uid": "jchmkOuP_Fggz",
-  "version": 3,
-  "weekStart": ""
+  "version": 9
 }
