@@ -418,7 +418,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 21,
+        "h": 19,
         "w": 8,
         "x": 16,
         "y": 0
@@ -643,8 +643,13 @@
         "type": "grafana-postgresql-datasource",
         "uid": "TeslaMate"
       },
+      "description": "Shows how much energy has been recovered through regenerative braking.\n\n\"Energy recovered\" is already included in \"Energy consumed (net)\" and is determined by looking for periods with negative power within your drive. \n\nRequires Streaming API to be enabled and available for this drive.",
       "fieldConfig": {
         "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -653,7 +658,8 @@
                 "color": "green"
               }
             ]
-          }
+          },
+          "unit": "kwatth"
         },
         "overrides": [
           {
@@ -719,7 +725,7 @@
           "hide": false,
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT $efficiency * 10 / convert_km(1, '$length_unit') as \"efficiency_$length_unit\"",
+          "rawSql": "with data as (\r\nselect\r\n\tp.power,\r\n\textract (second from p.date - lag(p.date) over (order by p.date)) as seconds\r\nfrom positions p\r\n\twhere drive_id = $current_drive and power < 0\r\n)\r\n\r\nselect sum(power * (seconds / 3600)) * -1 from data where seconds is not null and seconds < 1.5",
           "refId": "A",
           "select": [
             [
@@ -760,7 +766,7 @@
           ]
         }
       ],
-      "title": "Efficiency",
+      "title": "Energy recovered",
       "type": "stat"
     },
     {
@@ -2191,6 +2197,115 @@
       ],
       "title": "",
       "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "TeslaMate"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 8,
+        "x": 16,
+        "y": 19
+      },
+      "id": 38,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "value_and_name",
+        "wideLayout": false
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "TeslaMate"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH height as (SELECT\n\televation-LAG(elevation,1) over ( order BY\n\tdate ASC ) as diff\nFROM\n\tpositions\nWHERE\n car_id = $car_id AND\n $__timeFilter(date)\nORDER BY\n\tdate ASC\n\t)\nSELECT  ROUND(convert_m(sum(diff), '$alternative_length_unit')::numeric,0) || ' $alternative_length_unit'  as \"UP\" from height where diff > 0",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "TeslaMate"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH height as (SELECT\n\televation-LAG(elevation,1) over ( order BY\n\tdate ASC ) as diff\nFROM\n\tpositions\nWHERE\n car_id = $car_id AND\n $__timeFilter(date)\nORDER BY\n\tdate ASC\n\t)\nSELECT ROUND(convert_m(sum(diff), '$alternative_length_unit')::numeric,0) || ' $alternative_length_unit' as \"DOWN\" from height where diff < 0",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "",
+      "type": "stat"
     }
   ],
   "preload": false,
@@ -2298,8 +2413,8 @@
       },
       {
         "current": {
-          "text": "33",
-          "value": "33"
+          "text": "39",
+          "value": "39"
         },
         "datasource": {
           "type": "grafana-postgresql-datasource",
@@ -2317,8 +2432,8 @@
       },
       {
         "current": {
-          "text": "1752766631000",
-          "value": "1752766631000"
+          "text": "1752818969000",
+          "value": "1752818969000"
         },
         "datasource": {
           "type": "grafana-postgresql-datasource",
@@ -2336,8 +2451,8 @@
       },
       {
         "current": {
-          "text": "1752767268000",
-          "value": "1752767268000"
+          "text": "1752819127000",
+          "value": "1752819127000"
         },
         "datasource": {
           "type": "grafana-postgresql-datasource",
@@ -2394,12 +2509,12 @@
     ]
   },
   "time": {
-    "from": "2025-07-17T15:37:11.000Z",
-    "to": "2025-07-17T15:47:48.000Z"
+    "from": "2025-07-18T06:09:39.000Z",
+    "to": "2025-07-18T06:12:17.000Z"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Current Drive View",
   "uid": "jchmkOuP_Fggz",
-  "version": 9
+  "version": 14
 }
