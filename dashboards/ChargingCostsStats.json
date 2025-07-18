@@ -2696,7 +2696,7 @@
                   {
                     "targetBlank": true,
                     "title": "Trip",
-                    "url": "/d/FkUpJpQZk/trip?from=${__data.fields.date_from}&to=${__data.fields.date_to}&var-car_id=$car_id"
+                    "url": "/d/jchmkOuP_Fggz/current-drive-view?from=${__data.fields.date_from}&to=${__data.fields.date_to}&var-car_id=$car_id"
                   }
                 ]
               },
