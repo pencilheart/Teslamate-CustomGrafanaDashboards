@@ -2119,6 +2119,7 @@
             "type": "grafana-postgresql-datasource",
             "uid": "TeslaMate"
           },
+          "editorMode": "code",
           "format": "table",
           "group": [],
           "groupBy": [
@@ -2153,6 +2154,23 @@
               }
             ]
           ],
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
           "table": "drives",
           "timeColumn": "start_date",
           "timeColumnType": "timestamp",
@@ -2179,8 +2197,8 @@
           "color": {
             "mode": "thresholds"
           },
+          "fieldMinMax": false,
           "mappings": [],
-          "max": 541,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
@@ -2228,9 +2246,9 @@
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "min"
           ],
-          "fields": "/^range_km$/",
+          "fields": "",
           "values": false
         },
         "showUnfilled": true,
@@ -2266,7 +2284,7 @@
           "metricColumn": "none",
           "policy": "default",
           "rawQuery": true,
-          "rawSql": "SELECT $__timeGroupAlias(date,$__interval),\n  avg(convert_km(${preferred_range}_battery_range_km, '$length_unit')) as range_$length_unit\nFROM positions\nWHERE $__timeFilter(date) AND car_id=$car_id AND ${preferred_range}_battery_range_km is not null\nGROUP BY 1 ORDER BY 1 DESC LIMIT 1",
+          "rawSql": "WITH latest AS (\n  SELECT\n    date,\n    convert_km(${preferred_range}_battery_range_km, '$length_unit') AS range,\n    battery_level::numeric\n  FROM positions\n  WHERE car_id = $car_id AND ideal_battery_range_km IS NOT NULL\n  ORDER BY date DESC\n  LIMIT 1\n)\n\nSELECT 'remaining_range' AS label, range AS value FROM latest\nUNION ALL\nSELECT 'total_range' AS label, range / (battery_level / 100.0) AS value FROM latest;",
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -2513,12 +2531,12 @@
     ]
   },
   "time": {
-    "from": "now/y",
-    "to": "now/y"
+    "from": "2025-07-18T04:11:42.000Z",
+    "to": "2025-07-18T04:43:52.000Z"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Current Drive View",
   "uid": "jchmkOuP_Fggz",
-  "version": 20
+  "version": 26
 }
