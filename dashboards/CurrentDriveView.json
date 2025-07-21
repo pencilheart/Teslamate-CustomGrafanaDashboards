@@ -2351,12 +2351,12 @@
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
         },
-        "definition": "SELECT \n  CASE WHEN end_date IS NULL THEN 'now&refresh=10s' \n  ELSE CAST(round(extract(epoch FROM end_date) - 10) * 1000 AS VARCHAR(100)) END\n  FROM drives\n  WHERE id = $current_drive",
+        "definition": "SELECT \n  CASE WHEN end_date IS NULL THEN 'now&refresh=10s' \n  ELSE CAST(extract(epoch FROM end_date) * 1000 AS BIGINT)::VARCHAR END\n  FROM drives\n  WHERE id = $current_drive",
         "hide": 2,
         "includeAll": false,
         "name": "current_drive_end_time",
         "options": [],
-        "query": "SELECT \n  CASE WHEN end_date IS NULL THEN 'now&refresh=10s' \n  ELSE CAST(round(extract(epoch FROM end_date) - 10) * 1000 AS VARCHAR(100)) END\n  FROM drives\n  WHERE id = $current_drive",
+        "query": "SELECT \n  CASE WHEN end_date IS NULL THEN 'now&refresh=10s' \n  ELSE CAST(extract(epoch FROM end_date) * 1000 AS BIGINT)::VARCHAR END\n  FROM drives\n  WHERE id = $current_drive",
         "refresh": 2,
         "regex": "",
         "type": "query"
