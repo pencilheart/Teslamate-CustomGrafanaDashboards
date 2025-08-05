@@ -471,7 +471,6 @@
           },
           "decimals": 2,
           "mappings": [],
-          "max": 49,
           "min": 0,
           "noValue": "0",
           "thresholds": {
@@ -522,7 +521,7 @@
           "hide": false,
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT $__timeGroupAlias(date,$__interval), avg(charge_energy_added) as \"Added\" FROM charges WHERE charging_process_id = $charging_processes AND $__timeFilter(date) GROUP BY 1 ",
+          "rawSql": "SELECT $__timeGroupAlias(date,$__interval), $BatteryCapacity AS \"Battery Capacity\", avg(charge_energy_added) as \"Added\" FROM charges WHERE charging_process_id = $charging_processes AND $__timeFilter(date) GROUP BY 1 ",
           "refId": "B",
           "select": [
             [
