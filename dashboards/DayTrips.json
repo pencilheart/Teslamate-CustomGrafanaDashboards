@@ -79,7 +79,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -109,7 +109,7 @@
                   {
                     "targetBlank": true,
                     "title": "View Trip details",
-                    "url": "d/FkUpJpQZk?from=${__data.fields.start_date_ts.numeric}&to=${__data.fields.end_date_ts.numeric}"
+                    "url": "d/FkUpJpQZk?from=${__data.fields.start_date.numeric}&to=${__data.fields.end_date.numeric}"
                   }
                 ]
               },
@@ -135,7 +135,7 @@
               },
               {
                 "id": "decimals",
-                "value": 1
+                "value": 0
               },
               {
                 "id": "custom.minWidth",
@@ -145,46 +145,6 @@
                 "id": "custom.cellOptions",
                 "value": {
                   "mode": "gradient",
-                  "type": "gauge"
-                }
-              },
-              {
-                "id": "color",
-                "value": {
-                  "mode": "continuous-BlPu"
-                }
-              },
-              {
-                "id": "max",
-                "value": 400
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "distance_mi"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Distance"
-              },
-              {
-                "id": "unit",
-                "value": "lengthmi"
-              },
-              {
-                "id": "decimals",
-                "value": 1
-              },
-              {
-                "id": "custom.minWidth",
-                "value": 200
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
                   "type": "gauge"
                 }
               },
@@ -261,26 +221,10 @@
               {
                 "id": "unit",
                 "value": "velocitykmh"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "speed_mi"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Ø Speed"
               },
               {
-                "id": "custom.minWidth",
-                "value": 110
-              },
-              {
-                "id": "unit",
-                "value": "velocitymph"
+                "id": "decimals",
+                "value": 0
               }
             ]
           },
@@ -327,112 +271,36 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "power_max"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "max Power"
-              },
-              {
-                "id": "unit",
-                "value": "kwatt"
-              },
-              {
-                "id": "custom.minWidth",
-                "value": 90
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "speed_max_km"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "max Speed"
-              },
-              {
-                "id": "unit",
-                "value": "velocitykmh"
-              },
-              {
-                "id": "custom.minWidth",
-                "value": 100
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "speed_max_mi"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "max Speed"
-              },
-              {
-                "id": "unit",
-                "value": "velocitymph"
-              },
-              {
-                "id": "custom.minWidth",
-                "value": 90
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
               "options": "avg_temp_c"
             },
             "properties": [
+              {
+                "id": "displayName",
+                "value": "Temp"
+              },
               {
                 "id": "unit",
                 "value": "celsius"
               },
               {
-                "id": "displayName",
-                "value": "Temp"
-              },
-              {
                 "id": "custom.minWidth",
                 "value": 75
+              },
+              {
+                "id": "decimals",
+                "value": 0
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "avg_temp_f"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Temp"
-              },
-              {
-                "id": "unit",
-                "value": "fahrenheit"
-              },
-              {
-                "id": "custom.minWidth",
-                "value": 75
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "consumption_wh_per_km"
+              "options": "consumption_wh_per_km_gross"
             },
             "properties": [
               {
                 "id": "unit",
-                "value": "Wh/mi"
+                "value": "Wh/km"
               },
               {
                 "id": "custom.minWidth",
@@ -440,14 +308,14 @@
               },
               {
                 "id": "displayName",
-                "value": "Ø Consumption (net)"
+                "value": "Ø Consumption (Gross)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "consumption_wh_per_km"
+              "options": "consumption_wh_per_km_net"
             },
             "properties": [
               {
@@ -472,11 +340,11 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "Energy consumed (net)"
+                "value": "Energy consumed (gross)"
               },
               {
                 "id": "decimals",
-                "value": 1
+                "value": 0
               },
               {
                 "id": "custom.minWidth",
@@ -485,13 +353,29 @@
               {
                 "id": "unit",
                 "value": "kwatth"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "gauge"
+                }
+              },
+              {
+                "id": "max",
+                "value": 70
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-GrYlRd"
+                }
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "efficiency"
+              "options": "efficiency_net"
             },
             "properties": [
               {
@@ -536,48 +420,60 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Energy Consumed (kWh)"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 172
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "consumption_total_kwh"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 74
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Energy consumed (net)"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 108
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
               "options": "Ø Consumption (net)"
             },
             "properties": [
               {
                 "id": "custom.width",
-                "value": 131
+                "value": 127
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Ø Consumption (Gross)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 116
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Duration"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 98
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Ø Speed"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 94
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Temp"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 76
               }
             ]
           }
@@ -617,7 +513,7 @@
           "hide": false,
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "WITH trip AS (\r\n    SELECT \r\n        DATE(start_date) AS trip_date,\r\n        start_date,\r\n        end_date,\r\n        distance,\r\n        duration_min,\r\n        start_ideal_range_km,\r\n        end_ideal_range_km,\r\n        outside_temp_avg,\r\n        power_max,\r\n        speed_max\r\n    FROM drives\r\n    WHERE car_id = 1\r\n      AND $__timeFilter(start_date)\r\n      AND end_date IS NOT NULL\r\n      AND duration_min > 0\r\n),\r\n\r\ndaily_stats AS (\r\n    SELECT\r\n        trip_date,\r\n        MIN(start_date) AS start_date,\r\n        MAX(end_date) AS end_date,\r\n        SUM(distance) AS distance_km,\r\n        SUM(duration_min) AS duration_min,\r\n        AVG(outside_temp_avg) AS avg_temp_C,\r\n        MAX(power_max) AS power_max,\r\n        MAX(speed_max) AS speed_max_km,\r\n        SUM(start_ideal_range_km - end_ideal_range_km) AS range_drop_km,\r\n        SUM(start_ideal_range_km - end_ideal_range_km) * c.efficiency AS consumption_total_kWh\r\n    FROM trip\r\n    JOIN cars c ON c.id = 1\r\n    GROUP BY trip_date, c.efficiency\r\n)\r\n\r\nSELECT \r\n    ROUND(EXTRACT(epoch FROM start_date) * 1000) AS start_date_ts,\r\n    ROUND(EXTRACT(epoch FROM end_date) * 1000) AS end_date_ts,\r\n    start_date,\r\n    end_date,\r\n    distance_km,\r\n    duration_min * 60 AS duration_sec,\r\n    (distance_km / NULLIF(duration_min, 0) * 60) AS speed_km,\r\n    avg_temp_C,\r\n    power_max,\r\n    speed_max_km,\r\n    consumption_total_kWh,\r\n    (consumption_total_kWh * 1000 / NULLIF(distance_km, 0)) AS consumption_Wh_per_km,\r\n    143 / (consumption_total_kWh * 1000 / NULLIF(distance_km, 0)) AS efficiency\r\nFROM daily_stats\r\nWHERE distance_km >= 0\r\n  AND duration_min > 0\r\n  AND consumption_total_kWh > 0\r\nORDER BY start_date DESC;\r\n",
+          "rawSql": "WITH car_efficiency AS (\r\n    SELECT id, efficiency FROM cars WHERE id = 1\r\n),\r\n\r\ntrip AS (\r\n    SELECT \r\n        DATE(d.start_date) AS trip_date,\r\n        MIN(d.start_date) AS start_date,\r\n        MAX(d.end_date) AS end_date,\r\n        SUM(d.distance) AS distance_km,\r\n        SUM(d.duration_min) AS duration_min,\r\n        AVG(d.outside_temp_avg) AS avg_temp_C,\r\n        SUM(d.start_ideal_range_km - d.end_ideal_range_km) AS range_drop_km_net,\r\n        SUM(d.start_ideal_range_km - d.end_ideal_range_km) * (SELECT efficiency FROM car_efficiency) AS consumption_total_kWh_net\r\n    FROM drives d\r\n    WHERE d.car_id = 1\r\n      AND $__timeFilter(d.start_date)\r\n      AND d.end_date IS NOT NULL\r\n      AND d.duration_min > 0\r\n    GROUP BY DATE(d.start_date)\r\n),\r\n\r\ndrives_start_event AS (\r\n    SELECT 'drive_start' AS event, start_date AS date, start_ideal_range_km AS range, start_km AS odometer, car_id\r\n    FROM drives\r\n    WHERE car_id = 1 AND $__timeFilter(start_date)\r\n),\r\n\r\ndrives_end_event AS (\r\n    SELECT 'drive_end' AS event, end_date AS date, end_ideal_range_km AS range, end_km AS odometer, car_id\r\n    FROM drives\r\n    WHERE car_id = 1 AND $__timeFilter(end_date)\r\n),\r\n\r\ncharging_processes_start_event AS (\r\n    SELECT 'charging_process_start' AS event, cp.start_date AS date, p.ideal_battery_range_km AS range, p.odometer, cp.car_id\r\n    FROM charging_processes cp\r\n    INNER JOIN positions p ON cp.position_id = p.id\r\n    WHERE cp.car_id = 1 AND $__timeFilter(cp.start_date)\r\n),\r\n\r\ncharging_processes_end_event AS (\r\n    SELECT 'charging_process_end' AS event, cp.end_date AS date, p.ideal_battery_range_km AS range, p.odometer, cp.car_id\r\n    FROM charging_processes cp\r\n    INNER JOIN positions p ON cp.position_id = p.id\r\n    WHERE cp.car_id = 1 AND $__timeFilter(cp.end_date)\r\n),\r\n\r\npositions_events AS (\r\n    SELECT \r\n        CASE WHEN drive_id IS NOT NULL AND LEAD(drive_id) OVER w IS NOT NULL THEN 'drive_start' ELSE 'other' END AS event,\r\n        date,\r\n        ideal_battery_range_km AS range,\r\n        odometer,\r\n        car_id\r\n    FROM positions\r\n    WHERE ideal_battery_range_km IS NOT NULL AND car_id = 1 AND $__timeFilter(date)\r\n    WINDOW w AS (ORDER BY date)\r\n),\r\n\r\ncombined AS (\r\n    SELECT * FROM drives_start_event\r\n    UNION ALL\r\n    SELECT * FROM drives_end_event\r\n    UNION ALL\r\n    SELECT * FROM charging_processes_start_event\r\n    UNION ALL\r\n    SELECT * FROM charging_processes_end_event\r\n    UNION ALL\r\n    SELECT * FROM positions_events\r\n),\r\n\r\nfinal_events_marked AS (\r\n    SELECT\r\n        *,\r\n        ROW_NUMBER() OVER (PARTITION BY car_id ORDER BY date) AS rn\r\n    FROM combined\r\n),\r\n\r\nfinal_events_filtered AS (\r\n    SELECT\r\n        car_id,\r\n        date,\r\n        odometer,\r\n        range,\r\n        LEAD(odometer) OVER w AS next_odometer,\r\n        LEAD(range) OVER w AS next_range,\r\n        DATE(date) AS trip_date,\r\n        CASE \r\n            WHEN event != 'drive_start' THEN GREATEST(range - LEAD(range) OVER w, 0)\r\n            ELSE range - LEAD(range) OVER w\r\n        END AS range_loss\r\n    FROM final_events_marked\r\n    WHERE event NOT IN ('charging_process_start', 'charging_process_end')  -- 过滤充电起止事件，保留中间事件\r\n    WINDOW w AS (PARTITION BY car_id ORDER BY date)\r\n),\r\n\r\ndaily_energy_by_event AS (\r\n    SELECT\r\n        trip_date,\r\n        SUM(range_loss) AS total_range_loss\r\n    FROM final_events_filtered\r\n    WHERE range_loss IS NOT NULL\r\n    GROUP BY trip_date\r\n),\r\n\r\ndaily_energy_kwh AS (\r\n    SELECT\r\n        e.trip_date,\r\n        e.total_range_loss * (SELECT efficiency FROM car_efficiency) AS consumption_total_kWh_gross\r\n    FROM daily_energy_by_event e\r\n)\r\n\r\nSELECT\r\n    t.start_date,\r\n    t.end_date,\r\n    t.distance_km,\r\n    t.duration_min * 60 AS duration_sec,\r\n    (t.distance_km / NULLIF(t.duration_min, 0) * 60) AS speed_km,\r\n    t.avg_temp_C,\r\n    d.consumption_total_kWh_gross as consumption_total_kWh,\r\n    (d.consumption_total_kWh_gross * 1000 / NULLIF(t.distance_km, 0)) AS consumption_Wh_per_km_gross,\r\n    (t.consumption_total_kWh_net * 1000 / NULLIF(t.distance_km, 0)) AS consumption_Wh_per_km_net,\r\n    143 / NULLIF((t.consumption_total_kWh_net * 1000 / NULLIF(t.distance_km, 0)), 0) AS efficiency_net\r\n\r\nFROM trip t\r\nLEFT JOIN daily_energy_kwh d ON t.trip_date = d.trip_date\r\nORDER BY t.trip_date DESC;\r\n",
           "refId": "A",
           "select": [
             [
@@ -662,7 +558,7 @@
   ],
   "preload": false,
   "refresh": "",
-  "schemaVersion": 40,
+  "schemaVersion": 41,
   "tags": [
     "TeslamateCustomDashboards"
   ],
