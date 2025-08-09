@@ -139,7 +139,7 @@
               },
               {
                 "id": "custom.minWidth",
-                "value": 200
+                "value": 150
               },
               {
                 "id": "custom.cellOptions",
@@ -235,12 +235,12 @@
                 "value": "clocks"
               },
               {
-                "id": "custom.minWidth",
-                "value": 120
-              },
-              {
                 "id": "decimals",
                 "value": 1
+              },
+              {
+                "id": "custom.width",
+                "value": 80
               }
             ]
           },
@@ -253,10 +253,6 @@
               {
                 "id": "displayName",
                 "value": "Ø Speed"
-              },
-              {
-                "id": "custom.minWidth",
-                "value": 110
               },
               {
                 "id": "unit",
@@ -287,6 +283,10 @@
                     }
                   ]
                 }
+              },
+              {
+                "id": "custom.width",
+                "value": 100
               }
             ]
           },
@@ -345,7 +345,7 @@
                 "value": 0
               },
               {
-                "id": "custom.minWidth",
+                "id": "custom.width",
                 "value": 75
               }
             ]
@@ -365,12 +365,12 @@
                 "value": "Temp"
               },
               {
-                "id": "custom.minWidth",
-                "value": 75
-              },
-              {
                 "id": "decimals",
                 "value": 0
+              },
+              {
+                "id": "custom.width",
+                "value": 75
               }
             ]
           },
@@ -385,16 +385,16 @@
                 "value": "Wh/km"
               },
               {
-                "id": "custom.minWidth",
-                "value": 180
-              },
-              {
                 "id": "displayName",
-                "value": "Ø Consumption (gross)"
+                "value": "Ø Gross Consumption"
               },
               {
                 "id": "decimals",
                 "value": 0
+              },
+              {
+                "id": "custom.width",
+                "value": 120
               }
             ]
           },
@@ -414,7 +414,7 @@
               },
               {
                 "id": "custom.minWidth",
-                "value": 196
+                "value": 150
               },
               {
                 "id": "unit",
@@ -487,24 +487,12 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "% Start"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 112
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
               "options": "consumption_wh_per_km_net"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Ø Consumption (net)"
+                "value": "Ø Net Consumption"
               },
               {
                 "id": "unit",
@@ -515,8 +503,8 @@
                 "value": 0
               },
               {
-                "id": "custom.minWidth",
-                "value": 180
+                "id": "custom.width",
+                "value": 120
               }
             ]
           }
