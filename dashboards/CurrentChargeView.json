@@ -609,7 +609,7 @@
           "metricColumn": "none",
           "rawQuery": true,
           "rawSql": "SELECT COALESCE(g.name, CONCAT_WS(', ', COALESCE(addresses.name, CONCAT_WS(' ', addresses.road, addresses.house_number)), addresses.city)) FROM \tcharging_processes c \tLEFT JOIN addresses ON addresses.id = c.address_id \tLEFT JOIN geofences g ON g.id = geofence_id WHERE \tc.id = $charging_processes",
-          "refId": "Voltage",
+          "refId": "Address",
           "select": [
             [
               {
@@ -2432,12 +2432,13 @@
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
         },
-        "definition": "SELECT id FROM charging_processes WHERE car_id = $car_id ORDER BY start_date DESC LIMIT 1",
-        "hide": 2,
+        "definition": "SELECT\n    id AS __value,\n    TO_CHAR(start_date, 'YYYY-MM-DD HH24:MI') || '   ' || (\n        SELECT COALESCE(\n            g.name, \n            CONCAT_WS(\n                ', ', \n                COALESCE(addresses.name, CONCAT_WS(' ', addresses.road, addresses.house_number)),\n                addresses.city\n            )\n        )\n        FROM addresses\n        LEFT JOIN geofences g ON g.id = charging_processes.geofence_id\n        WHERE addresses.id = charging_processes.address_id\n    ) AS __text\nFROM charging_processes\nWHERE car_id = $car_id\nORDER BY start_date DESC;\n",
+        "description": "",
         "includeAll": false,
+        "label": "Charge",
         "name": "charging_processes",
         "options": [],
-        "query": "SELECT id FROM charging_processes WHERE car_id = $car_id ORDER BY start_date DESC LIMIT 1",
+        "query": "SELECT\n    id AS __value,\n    TO_CHAR(start_date, 'YYYY-MM-DD HH24:MI') || '   ' || (\n        SELECT COALESCE(\n            g.name, \n            CONCAT_WS(\n                ', ', \n                COALESCE(addresses.name, CONCAT_WS(' ', addresses.road, addresses.house_number)),\n                addresses.city\n            )\n        )\n        FROM addresses\n        LEFT JOIN geofences g ON g.id = charging_processes.geofence_id\n        WHERE addresses.id = charging_processes.address_id\n    ) AS __text\nFROM charging_processes\nWHERE car_id = $car_id\nORDER BY start_date DESC;\n",
         "refresh": 2,
         "regex": "",
         "type": "query"
