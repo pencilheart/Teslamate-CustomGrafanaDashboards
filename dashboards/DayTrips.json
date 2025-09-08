@@ -374,7 +374,7 @@
               },
               {
                 "id": "unit",
-                "value": "kwatth"
+                "value": "kWh"
               },
               {
                 "id": "custom.cellOptions",
