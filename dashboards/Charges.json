@@ -1634,7 +1634,7 @@
     ]
   },
   "time": {
-    "from": "now-3M",
+    "from": "now/y",
     "to": "now"
   },
   "timepicker": {},
