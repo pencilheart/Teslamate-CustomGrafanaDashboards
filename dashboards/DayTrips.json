@@ -109,7 +109,7 @@
                   {
                     "targetBlank": true,
                     "title": "View Trip details",
-                    "url": "d/FkUpJpQZk?from=${__data.fields.start_date.numeric}&to=${__data.fields.end_date.numeric}"
+                    "url": "d/jchm9RxutVS7e?from=${__data.fields.start_date.numeric}&to=${__data.fields.end_date.numeric}"
                   }
                 ]
               },

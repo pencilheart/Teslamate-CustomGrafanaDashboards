@@ -98,3 +98,4 @@ ipch/
 *.sdf
 配置教程.md
 teslamate.bck
+docker-compose.yml
