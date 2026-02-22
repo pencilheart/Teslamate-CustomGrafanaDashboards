@@ -1991,13 +1991,13 @@
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
         },
-        "definition": "SELECT\n    id AS __value,\n    TO_CHAR(start_date, 'YYYY-MM-DD HH24:MI') || '   ' || (\n        SELECT COALESCE(\n            g.name, \n            CONCAT_WS(\n                ', ', \n                COALESCE(addresses.name, CONCAT_WS(' ', addresses.road, addresses.house_number)),\n                addresses.city\n            )\n        )\n        FROM addresses\n        LEFT JOIN geofences g ON g.id = charging_processes.geofence_id\n        WHERE addresses.id = charging_processes.address_id\n    ) AS __text\nFROM charging_processes\nWHERE car_id = $car_id\nORDER BY start_date DESC;\n",
+        "definition": "SELECT\n    id AS __value,\n    TO_CHAR((start_date AT TIME ZONE 'UTC') AT TIME ZONE 'Asia/Shanghai', 'YYYY-MM-DD HH24:MI')|| '   ' || (\n        SELECT COALESCE(\n            g.name, \n            CONCAT_WS(\n                ', ', \n                COALESCE(addresses.name, CONCAT_WS(' ', addresses.road, addresses.house_number)),\n                addresses.city\n            )\n        )\n        FROM addresses\n        LEFT JOIN geofences g ON g.id = charging_processes.geofence_id\n        WHERE addresses.id = charging_processes.address_id\n    ) AS __text\nFROM charging_processes\nWHERE car_id = $car_id\nORDER BY start_date DESC;\n",
         "description": "",
         "includeAll": false,
         "label": "Charge",
         "name": "charging_processes",
         "options": [],
-        "query": "SELECT\n    id AS __value,\n    TO_CHAR(start_date, 'YYYY-MM-DD HH24:MI') || '   ' || (\n        SELECT COALESCE(\n            g.name, \n            CONCAT_WS(\n                ', ', \n                COALESCE(addresses.name, CONCAT_WS(' ', addresses.road, addresses.house_number)),\n                addresses.city\n            )\n        )\n        FROM addresses\n        LEFT JOIN geofences g ON g.id = charging_processes.geofence_id\n        WHERE addresses.id = charging_processes.address_id\n    ) AS __text\nFROM charging_processes\nWHERE car_id = $car_id\nORDER BY start_date DESC;\n",
+        "query": "SELECT\n    id AS __value,\n    TO_CHAR((start_date AT TIME ZONE 'UTC') AT TIME ZONE 'Asia/Shanghai', 'YYYY-MM-DD HH24:MI')|| '   ' || (\n        SELECT COALESCE(\n            g.name, \n            CONCAT_WS(\n                ', ', \n                COALESCE(addresses.name, CONCAT_WS(' ', addresses.road, addresses.house_number)),\n                addresses.city\n            )\n        )\n        FROM addresses\n        LEFT JOIN geofences g ON g.id = charging_processes.geofence_id\n        WHERE addresses.id = charging_processes.address_id\n    ) AS __text\nFROM charging_processes\nWHERE car_id = $car_id\nORDER BY start_date DESC;\n",
         "refresh": 2,
         "regex": "",
         "type": "query"
@@ -2008,12 +2008,12 @@
           "type": "grafana-postgresql-datasource",
           "uid": "TeslaMate"
         },
-        "definition": "SELECT CASE WHEN end_date IS NULL THEN 'now&refresh=10s' ELSE CAST(extract(epoch FROM end_date) * 1000 AS BIGINT)::VARCHAR END FROM charging_processes WHERE id = $charging_processes",
+        "definition": "SELECT CAST(extract(epoch FROM COALESCE(end_date, now())) * 1000 AS BIGINT) AS end_ms FROM charging_processes WHERE id = $charging_processes",
         "hide": 2,
         "includeAll": false,
         "name": "current_end_time",
         "options": [],
-        "query": "SELECT CASE WHEN end_date IS NULL THEN 'now&refresh=10s' ELSE CAST(extract(epoch FROM end_date) * 1000 AS BIGINT)::VARCHAR END FROM charging_processes WHERE id = $charging_processes",
+        "query": "SELECT CAST(extract(epoch FROM COALESCE(end_date, now())) * 1000 AS BIGINT) AS end_ms FROM charging_processes WHERE id = $charging_processes",
         "refresh": 2,
         "regex": "",
         "type": "query"
